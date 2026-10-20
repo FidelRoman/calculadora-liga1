@@ -1109,7 +1109,7 @@
             ${fechas.map(f => {
               const isPending = f >= 13;
               return `
-                <th class="py-3.5 px-2 text-center w-[106px] min-w-[106px] max-w-[106px] border-r border-slate-800/60 ${isPending ? 'bg-indigo-950/30 text-indigo-300' : 'text-slate-400 bg-slate-950/40'}">
+                <th class="py-3.5 px-2 text-center w-[125px] min-w-[125px] max-w-[125px] border-r border-slate-800/60 ${isPending ? 'bg-indigo-950/30 text-indigo-300' : 'text-slate-400 bg-slate-950/40'}">
                   <div class="flex items-center justify-center gap-1 font-bold">
                     ${!isPending ? '<i data-lucide="lock" class="w-3 h-3 text-slate-500"></i>' : ''}
                     <span>Fecha ${f}</span>
@@ -1192,7 +1192,7 @@
               else if (pts === 0) badgeColor = 'bg-rose-500/20 border-rose-500/50 text-rose-300';
 
               return `
-                <td class="px-1.5 py-2 w-[106px] min-w-[106px] max-w-[106px] border-r border-slate-800/60 align-top ${!isLocked ? 'bg-indigo-950/10' : ''}">
+                <td class="px-1.5 py-2 w-[118px] min-w-[118px] max-w-[118px] border-r border-slate-800/60 align-top ${!isLocked ? 'bg-indigo-950/10' : ''}">
                   <div class="flex flex-col items-center gap-1.5">
                     <!-- Top Sub-row: Fixture Matchup with Opponent Mini-Logo -->
                     <div class="w-full flex items-center justify-center gap-1 px-1.5 py-1 rounded-md bg-slate-950/70 border border-slate-800/80 text-[11px] font-medium text-slate-300 truncate" title="${TEAM_MAP[m.h].name} vs ${TEAM_MAP[m.a].name}">
