@@ -184,10 +184,6 @@
           <i data-lucide="calendar-clock" class="w-4 h-4"></i>
           <span>Simulador por Fecha (F1 a F17)</span>
         </button>
-        <button id="tab-standings" onclick="switchMainTab('standings')" class="flex items-center gap-2 px-4 py-2.5 rounded-xl font-display font-bold text-sm transition-all bg-slate-800/80 text-slate-300 hover:bg-slate-800">
-          <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
-          <span>Tablas Completas (Clausura + Acumulado)</span>
-        </button>
       </div>
 
       <!-- Matrix Display Controls -->
@@ -274,7 +270,7 @@
             </table>
           </div>
           <div class="px-4 py-2.5 bg-slate-950/60 border-t border-slate-800/80 text-[11px] text-slate-400 flex flex-wrap justify-between gap-2">
-            <span><strong class="text-amber-400">1° puesto:</strong> Ganador del Torneo Clausura (Playoffs / Campeón Nacional)</span>
+            <span><strong class="text-amber-400">1° puesto:</strong> Ganador del Clausura; clasifica a Playoffs si termina entre los 8 primeros del acumulado</span>
             <span>* UTC tiene -5 pts por resolución FPF-CL.</span>
           </div>
         </div>
@@ -314,13 +310,24 @@
             </table>
           </div>
           <div class="px-4 py-2.5 bg-slate-950/60 border-t border-slate-800/80 text-[11px] text-slate-400 flex flex-wrap gap-x-4 gap-y-1">
-            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> 1°-4° Copa Libertadores</span>
-            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span> 5°-8° Copa Sudamericana</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Puestos finales 1°-4°: Copa Libertadores</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span> Puestos finales 5°-8°: Copa Sudamericana</span>
             <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> 16°-18° Descenso Liga 2</span>
             <span class="text-slate-500">Sanciones FPF: UTC (-10), Boys (-4), Cajamarca (-2), ADT (-1)</span>
           </div>
         </div>
       </div>
+
+      <section class="glass-card rounded-2xl p-5 border border-slate-800/90">
+        <h3 class="font-display font-bold text-lg text-white mb-1 flex items-center gap-2">
+          <i data-lucide="crown" class="w-5 h-5 text-amber-400"></i>
+          Playoffs y proyección de copas 2027
+        </h3>
+        <p class="text-xs text-slate-400 mb-4">Escenario según tus resultados proyectados y el reglamento Liga1 2026. Las posiciones internacionales se confirman después de los Playoffs.</p>
+        <div id="playoffSimulationBox" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Populated dynamically by JS -->
+        </div>
+      </section>
     </div>
 
     <div id="view-fixtures" class="hidden space-y-5">
@@ -346,18 +353,6 @@
         <!-- Matches of Selected Fecha -->
         <div id="fechaMatchesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
           <!-- Populated by JS -->
-        </div>
-      </div>
-    </div>
-
-    <div id="view-standings" class="hidden space-y-6">
-      <div class="glass-card rounded-2xl p-5 border border-slate-800/90">
-        <h3 class="font-display font-bold text-lg text-white mb-3 flex items-center gap-2">
-          <i data-lucide="crown" class="w-5 h-5 text-amber-400"></i>
-          Escenario de Definición del Título Nacional (TETRA / Playoffs Liga 1 2026) y Clasificación a Copa Libertadores
-        </h3>
-        <div id="playoffSimulationBox" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <!-- Populated dynamically by JS -->
         </div>
       </div>
     </div>
@@ -817,7 +812,7 @@
       matches: JSON.parse(JSON.stringify(INITIAL_MATCHES)),
       matrixRange: 'compact', // 'compact' (group played dates through latest - 2) or 'full' (F1..F17)
       inputMode: 'points',    // 'points' (3/1/0 selector) or 'scores' (exact goals)
-      activeTab: 'matrix',    // 'matrix' | 'fixtures' | 'standings'
+      activeTab: 'matrix',    // 'matrix' | 'fixtures'
       selectedFecha: 13
     };
 
@@ -1384,6 +1379,7 @@
       const uniAc = standings.acumuladoStats['UNI'];
       const uniClRank = standings.clausuraSorted.findIndex(s => s.id === 'UNI') + 1;
       const uniAcRank = standings.acumuladoSorted.findIndex(s => s.id === 'UNI') + 1;
+      const alianzaAcRank = standings.acumuladoSorted.findIndex(s => s.id === 'ALI') + 1;
 
       const kpiBanner = document.getElementById('kpiBanner');
       kpiBanner.innerHTML = `
@@ -1393,7 +1389,7 @@
           <div class="min-w-0">
             <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Ganador Apertura 2026</div>
             <div class="font-display font-extrabold text-base text-white truncate">Alianza Lima (40 pts)</div>
-            <div class="text-xs text-emerald-400 font-medium">Clasificado a Playoffs / Copa L</div>
+            <div class="text-xs ${alianzaAcRank <= 8 ? 'text-emerald-400' : 'text-rose-400'} font-medium">${alianzaAcRank <= 8 ? 'Clasifica a Playoffs: está en el top 8 acumulado' : 'Fuera del top 8: pierde su plaza de Playoffs'}</div>
           </div>
         </div>
 
@@ -1424,72 +1420,118 @@
             <div class="text-[11px] font-bold uppercase tracking-wider text-amber-300">Radar TETRA / Copa L (U)</div>
             <div class="font-display font-extrabold text-base text-white truncate">Cla: #${uniClRank} (${uniCl.pts}p) • Acu: #${uniAcRank} (${uniAc.pts}p)</div>
             <div class="text-xs ${uniClRank === 1 ? 'text-emerald-400 font-semibold' : 'text-slate-400'}">
-              ${uniClRank === 1 ? '🔥 Ganando el Clausura fuerza Playoffs' : `A ${clWinner.pts - uniCl.pts} pts del líder del Clausura`}
+              ${uniClRank === 1 ? `Lidera el Clausura; clasifica a Playoffs si queda en el top 8 acumulado` : `A ${clWinner.pts - uniCl.pts} pts del líder del Clausura`}
             </div>
           </div>
         </div>
       `;
 
-      // Playoff Scenario Explanation in Tab 3
+      // Projected 2026 playoff format from the official Liga1 regulations.
       const playoffBox = document.getElementById('playoffSimulationBox');
       if (playoffBox) {
-        const top4Ac = standings.acumuladoSorted.slice(0, 4);
-        const isAlianzaDirectChamp = clWinner.id === 'ALI';
+        const accumulated = standings.acumuladoSorted;
+        const rankById = Object.fromEntries(accumulated.map((st, i) => [st.id, i + 1]));
+        const openingWinnerId = 'ALI';
+        const stageWinners = [...new Set([openingWinnerId, clWinner.id])];
+        const topTwo = accumulated.slice(0, 2).map(st => st.id);
+        const topFour = accumulated.slice(0, 4);
+        const topEight = accumulated.slice(0, 8);
+        const eligibleStageWinners = stageWinners.filter(id => rankById[id] <= 8);
+        const playoffParticipants = [...new Set([...eligibleStageWinners, ...topTwo])]
+          .sort((a, b) => rankById[a] - rankById[b]);
+        const teamBadge = id => `
+          <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-white">
+            ${getLogoHtml(id, 'w-5 h-5')}${TEAM_MAP[id].name}
+          </span>
+        `;
+        const matchupRow = (label, firstId, secondId) => `
+          <div class="flex flex-wrap items-center justify-between gap-2 py-1.5 border-t border-slate-800/80">
+            <span class="text-[11px] font-semibold text-slate-400">${label}</span>
+            <span class="flex items-center gap-2">${teamBadge(firstId)}<span class="text-[10px] font-bold text-slate-500">VS</span>${teamBadge(secondId)}</span>
+          </div>
+        `;
+
+        let playoffTitle = '';
+        let playoffDescription = '';
+        let playoffMatchups = '';
+        let finalDescription = '';
+
+        if (clWinner.id === openingWinnerId) {
+          playoffTitle = 'Alianza Lima campeón nacional directo';
+          playoffDescription = 'Al ganar Apertura y Clausura, Alianza es campeón sin una semifinal por el título.';
+          playoffMatchups = matchupRow('Fase 1 · subcampeonato', topFour[2].id, topFour[3].id);
+          finalDescription = `El ganador enfrenta al ${teamBadge(topFour[1].id)} en la Fase 2 por el subcampeonato. Las llaves son de ida y vuelta.`;
+        } else if (stageWinners.every(id => topTwo.includes(id))) {
+          playoffTitle = 'Final directa por el título · sin semifinal';
+          playoffDescription = 'Los campeones del Apertura y Clausura ocupan los dos primeros puestos del acumulado; clasifican directamente a la final.';
+          playoffMatchups = matchupRow('Play-Off Final · ida y vuelta', openingWinnerId, clWinner.id);
+          finalDescription = 'El club mejor ubicado en el acumulado define la vuelta como local.';
+        } else if (eligibleStageWinners.length === 0) {
+          playoffTitle = 'Final directa por el título · sin semifinal';
+          playoffDescription = 'Los ganadores de Apertura y Clausura quedaron fuera del top 8 acumulado y pierden su plaza de Playoffs.';
+          playoffMatchups = matchupRow('Play-Off Final · ida y vuelta', topTwo[0], topTwo[1]);
+          finalDescription = 'Los dos primeros del acumulado clasifican directamente a la final.';
+        } else if (eligibleStageWinners.length === 1) {
+          playoffTitle = 'Una semifinal por el título';
+          playoffDescription = 'Un campeón de etapa no quedó entre los ocho primeros del acumulado y pierde su plaza.';
+          if (playoffParticipants.length >= 3) {
+            const [directFinalist, ...semifinalists] = playoffParticipants;
+            playoffMatchups = matchupRow('Semifinal · ida y vuelta', semifinalists[0], semifinalists[1]);
+            finalDescription = `El ${teamBadge(directFinalist)} clasifica directo a la final; enfrenta al ganador de la semifinal.`;
+          } else {
+            playoffMatchups = matchupRow('Play-Off Final · ida y vuelta', playoffParticipants[0], playoffParticipants[1]);
+            finalDescription = 'Solo quedan dos clubes con derecho a Playoffs; clasifican directamente a la final.';
+          }
+        } else {
+          const winnersInTopTwo = eligibleStageWinners.filter(id => topTwo.includes(id));
+          if (winnersInTopTwo.length === 1) {
+            const directFinalist = winnersInTopTwo[0];
+            const otherStageWinner = eligibleStageWinners.find(id => id !== directFinalist);
+            const otherTopTwoClub = topTwo.find(id => id !== directFinalist);
+            playoffTitle = 'Una semifinal y una clasificación directa';
+            playoffDescription = `${TEAM_MAP[directFinalist].name}, campeón de etapa y top 2 del acumulado, pasa directamente a la final.`;
+            playoffMatchups = matchupRow('Semifinal · ida y vuelta', otherStageWinner, otherTopTwoClub);
+            finalDescription = `El ganador enfrenta al ${teamBadge(directFinalist)} en la final.`;
+          } else {
+            playoffTitle = 'Dos semifinales por el título';
+            playoffDescription = 'Clasifican los campeones de Apertura y Clausura (si están en el top 8) más los dos primeros del acumulado.';
+            playoffMatchups = matchupRow('Semifinal 1 · ida y vuelta', playoffParticipants[0], playoffParticipants[3])
+              + matchupRow('Semifinal 2 · ida y vuelta', playoffParticipants[1], playoffParticipants[2]);
+            finalDescription = 'Los dos ganadores disputan la final por el título nacional.';
+          }
+        }
+
+        const teamList = (teams, prefix, colorClass) => teams.map((st, i) => `
+          <div class="flex items-center justify-between gap-2 text-xs">
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="font-bold ${colorClass}">${prefix}${i + 1}:</span>
+              ${getLogoHtml(st.id, 'w-4 h-4')}
+              <span class="truncate text-white font-semibold">${st.team.name}</span>
+            </div>
+            <span class="shrink-0 text-slate-400 font-mono">${st.pts} pts</span>
+          </div>
+        `).join('');
 
         playoffBox.innerHTML = `
           <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
             <div class="text-xs font-bold uppercase tracking-wider text-amber-400">Definición del Campeón 2026</div>
-            ${isAlianzaDirectChamp ? `
-              <div class="flex items-center gap-3 py-2">
-                ${getLogoHtml('ALI', 'w-10 h-10')}
-                <div>
-                  <div class="font-display font-bold text-base text-white">Alianza Lima Campeón Directo</div>
-                  <p class="text-xs text-slate-400">Al ganar tanto el Apertura como el Clausura en tu simulación, se proclama campeón nacional sin necesidad de Playoff.</p>
-                </div>
-              </div>
-            ` : `
-              <div class="flex items-center gap-3 py-2">
-                ${getLogoHtml('ALI', 'w-8 h-8')}
-                <span class="text-xs font-bold text-slate-500">VS</span>
-                ${getLogoHtml(clWinner.id, 'w-8 h-8')}
-                <div>
-                  <div class="font-display font-bold text-sm text-white">Playoff por el Título Nacional</div>
-                  <p class="text-xs text-slate-400">Alianza Lima (Ganador Apertura) vs <strong>${clWinner.team.name}</strong> (Ganador Clausura proyectado).</p>
-                </div>
-              </div>
-            `}
+            <div class="font-display font-bold text-sm text-white">${playoffTitle}</div>
+            <p class="text-xs text-slate-400">${playoffDescription}</p>
+            <div class="space-y-1">${playoffMatchups}</div>
+            <p class="text-xs text-slate-400">${finalDescription}</p>
+            <p class="text-[10px] text-slate-500">En llaves de ida y vuelta se define por puntos, luego diferencia de goles y, si persiste el empate, penales. La mejor ubicación acumulada da la localía de vuelta.</p>
           </div>
 
           <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
-            <div class="text-xs font-bold uppercase tracking-wider text-sky-400">Clasificados a Copa Libertadores 2027</div>
-            <div class="space-y-1.5">
-              ${top4Ac.map((st, i) => `
-                <div class="flex items-center justify-between text-xs">
-                  <div class="flex items-center gap-2">
-                    <span class="font-bold text-amber-400">Perú ${i + 1}:</span>
-                    ${getLogoHtml(st.id, 'w-4 h-4')}
-                    <span class="text-white font-semibold">${st.team.name}</span>
-                  </div>
-                  <span class="text-slate-400 font-mono">${st.pts} pts</span>
-                </div>
-              `).join('')}
-            </div>
+            <div class="text-xs font-bold uppercase tracking-wider text-sky-400">Top 4 acumulado · referencia Libertadores</div>
+            <p class="text-[11px] text-slate-400">Los puestos finales 1°–4° reciben los cupos Perú 1–4. Los Playoffs pueden cambiar este orden.</p>
+            <div class="space-y-1.5">${teamList(topFour, '#', 'text-amber-400')}</div>
           </div>
 
           <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
-            <div class="text-xs font-bold uppercase tracking-wider text-indigo-400">Clasificados a Copa Sudamericana 2027</div>
-            <div class="space-y-1.5">
-              ${standings.acumuladoSorted.slice(4, 8).map((st, i) => `
-                <div class="flex items-center justify-between text-xs">
-                  <div class="flex items-center gap-2">
-                    <span class="font-bold text-sky-400">Sud ${i + 1}:</span>
-                    ${getLogoHtml(st.id, 'w-4 h-4')}
-                    <span class="text-white font-semibold">${st.team.name}</span>
-                  </div>
-                  <span class="text-slate-400 font-mono">${st.pts} pts</span>
-                </div>
-              `).join('')}
-            </div>
+            <div class="text-xs font-bold uppercase tracking-wider text-indigo-400">Puestos 5–8 · referencia Sudamericana</div>
+            <p class="text-[11px] text-slate-400">La tabla muestra el acumulado proyectado; los cupos corresponden a los puestos finales 5°–8°.</p>
+            <div class="space-y-1.5">${teamList(topEight.slice(4, 8), '#', 'text-sky-400')}</div>
           </div>
         `;
       }
@@ -1624,7 +1666,7 @@
 
     function switchMainTab(tab) {
       state.activeTab = tab;
-      ['matrix', 'fixtures', 'standings'].forEach(t => {
+      ['matrix', 'fixtures'].forEach(t => {
         const viewEl = document.getElementById(`view-${t}`);
         const btnEl = document.getElementById(`tab-${t}`);
         if (t === tab) {
