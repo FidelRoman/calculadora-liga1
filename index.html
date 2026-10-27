@@ -103,7 +103,7 @@
           </div>
           <p class="text-xs text-slate-400 flex items-center gap-1.5">
             <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span id="syncStatusText">Actualizado hasta Fecha 12 jugada • Fechas 13–17 listas para pronosticar</span>
+            <span id="syncStatusText">Actualizado hasta Fecha 13 jugada • Fechas 14–17 listas para pronosticar</span>
           </p>
         </div>
       </div>
@@ -120,9 +120,9 @@
           <span>Exportar a Sheets</span>
         </button>
 
-        <button onclick="resetPredictions()" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/20 text-xs font-semibold transition-all" title="Limpiar pronósticos de Fechas 13 a 17">
+        <button onclick="resetPredictions()" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/20 text-xs font-semibold transition-all" title="Limpiar pronósticos de Fechas 14 a 17">
           <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-          <span class="hidden sm:inline">Reiniciar F13-F17</span>
+          <span class="hidden sm:inline">Reiniciar F14-F17</span>
         </button>
       </div>
     </div>
@@ -222,7 +222,7 @@
             <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-amber-500/30 border border-amber-500"></span> Empató (1 pt)</span>
             <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-rose-500/30 border border-rose-500"></span> Perdió (0 pts)</span>
             <span class="flex items-center gap-1.5 text-slate-400"><i data-lucide="lock" class="w-3.5 h-3.5 text-slate-500"></i> F1–F12 Oficiales (no editables)</span>
-            <span class="flex items-center gap-1.5 text-indigo-300 font-semibold"><span class="w-2.5 h-2.5 rounded-sm bg-indigo-500/30 border border-indigo-400 border-dashed"></span> F13–F17 Pronóstico editable</span>
+            <span class="flex items-center gap-1.5 text-indigo-300 font-semibold"><span class="w-2.5 h-2.5 rounded-sm bg-indigo-500/30 border border-indigo-400 border-dashed"></span> F14–F17 Pronóstico editable</span>
           </div>
         </div>
 
@@ -335,7 +335,7 @@
         <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
           <div>
             <h3 class="font-display font-bold text-lg text-white">Fixture Completo y Simulador por Jornada (Fechas 1 a 17)</h3>
-            <p class="text-xs text-slate-400">Las Fechas 1 a 12 contienen los resultados oficiales jugados. Las Fechas 13 a 17 están listas para que coloques marcadores o ganadores.</p>
+            <p class="text-xs text-slate-400">Las Fechas 1 a 13 contienen los resultados oficiales jugados. Las Fechas 14 a 17 están listas para que coloques marcadores o ganadores.</p>
           </div>
           <div class="flex items-center gap-2">
             <button onclick="fillRemainingRandomly()" class="px-3.5 py-2 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-500/30 text-indigo-300 text-xs font-semibold transition flex items-center gap-1.5">
@@ -614,7 +614,7 @@
 
     const TEAM_MAP = Object.fromEntries(TEAMS.map(t => [t.id, t]));
 
-    // Official played results from Fecha 1 to Fecha 12 + Official Fixture Fecha 13 to 17
+    // Official played results from Fecha 1 to Fecha 13 + fixtures for Fecha 14 to 17
     const INITIAL_MATCHES = [
       // FECHA 1
       { f: 1, h: 'CAJ', a: 'JP2', hg: 2, ag: 2, official: true },
@@ -748,16 +748,16 @@
       { f: 12, h: 'AAS', a: 'UNI', hg: 1, ag: 4, official: true },
       { f: 12, h: 'CIE', a: 'UTC', hg: 1, ag: 0, official: true },
 
-      // FECHA 13 (Por jugar: 23 al 26 de Octubre 2026)
-      { f: 13, h: 'UTC', a: 'MEL', hg: null, ag: null, official: false },
-      { f: 13, h: 'GRA', a: 'ADT', hg: null, ag: null, official: false },
-      { f: 13, h: 'SHU', a: 'AAS', hg: null, ag: null, official: false },
-      { f: 13, h: 'CUS', a: 'CRI', hg: null, ag: null, official: false },
-      { f: 13, h: 'UNI', a: 'JP2', hg: null, ag: null, official: false },
-      { f: 13, h: 'MOQ', a: 'ALI', hg: null, ag: null, official: false },
-      { f: 13, h: 'SBA', a: 'CAJ', hg: null, ag: null, official: false },
-      { f: 13, h: 'GAR', a: 'CHA', hg: null, ag: null, official: false },
-      { f: 13, h: 'COM', a: 'CIE', hg: null, ag: null, official: false },
+      // FECHA 13 (Jugada del 23 al 25/10/2026; fuentes: futbolperuano.com y libero.pe)
+      { f: 13, h: 'UTC', a: 'MEL', hg: 1, ag: 2, official: true },
+      { f: 13, h: 'GRA', a: 'ADT', hg: 1, ag: 1, official: true },
+      { f: 13, h: 'SHU', a: 'AAS', hg: 4, ag: 1, official: true },
+      { f: 13, h: 'CUS', a: 'CRI', hg: 3, ag: 1, official: true },
+      { f: 13, h: 'UNI', a: 'JP2', hg: 3, ag: 0, official: true },
+      { f: 13, h: 'MOQ', a: 'ALI', hg: 0, ag: 1, official: true },
+      { f: 13, h: 'SBA', a: 'CAJ', hg: 4, ag: 2, official: true },
+      { f: 13, h: 'GAR', a: 'CHA', hg: 4, ag: 1, official: true },
+      { f: 13, h: 'COM', a: 'CIE', hg: 3, ag: 1, official: true },
 
       // FECHA 14 (Por jugar: 27 al 29 de Octubre 2026)
       { f: 14, h: 'CHA', a: 'CUS', hg: null, ag: null, official: false },
@@ -825,7 +825,7 @@
           state.selectedTeams = parsed.selectedTeams;
         }
         if (Array.isArray(parsed.matches) && parsed.matches.length === INITIAL_MATCHES.length) {
-          // Restore official results for past matches (F1-F12) to ensure no modified past scores persist
+          // Restore embedded official results, replacing saved predictions for newly completed dates
           state.matches = parsed.matches.map((m, i) => {
             const initM = INITIAL_MATCHES[i];
             if (initM.official || initM.f <= 12) {
@@ -881,7 +881,7 @@
       if (idx === -1) return;
       const m = state.matches[idx];
       if (m.official || m.f <= 12) {
-        showToast('Los partidos pasados de las Fechas 1 a 12 son oficiales y no son editables.');
+        showToast('Los resultados oficiales no son editables.');
         return;
       }
       const currentPts = getTeamPointsInMatch(m, teamId);
@@ -914,7 +914,7 @@
       const m = state.matches[matchIdx];
       if (!m) return;
       if (m.official || m.f <= 12) {
-        showToast('Los partidos pasados de las Fechas 1 a 12 son oficiales y no son editables.');
+        showToast('Los resultados oficiales no son editables.');
         return;
       }
       if (valStr === '' || valStr === null) {
@@ -1102,7 +1102,7 @@
               </th>
             ` : ''}
             ${fechas.map(f => {
-              const isPending = f >= 13;
+              const isPending = state.matches.some(m => m.f === f && !m.official);
               return `
                 <th class="py-3.5 px-2 text-center w-[125px] min-w-[125px] max-w-[125px] border-r border-slate-800/60 ${isPending ? 'bg-indigo-950/30 text-indigo-300' : 'text-slate-400 bg-slate-950/40'}">
                   <div class="flex items-center justify-center gap-1 font-bold">
@@ -1542,7 +1542,7 @@
       let tabsHtml = '';
       for (let f = 1; f <= 17; f++) {
         const isCurrent = state.selectedFecha === f;
-        const isPending = f >= 13;
+        const isPending = state.matches.some(m => m.f === f && !m.official);
         tabsHtml += `
           <button
             onclick="selectFecha(${f})"
@@ -1713,7 +1713,7 @@
       state.matches = JSON.parse(JSON.stringify(INITIAL_MATCHES));
       saveState();
       renderAll();
-      showToast('Pronósticos de las Fechas 13 a 17 reiniciados a su estado oficial.');
+      showToast('Pronósticos de las Fechas 14 a 17 reiniciados a su estado oficial.');
     }
 
     function fillRemainingRandomly() {
@@ -1739,7 +1739,7 @@
       });
       saveState();
       renderAll();
-      showToast('Fechas 13 a 17 proyectadas según rendimiento actual y localía.');
+      showToast('Fechas 14 a 17 proyectadas según rendimiento actual y localía.');
     }
 
     function openSheetExportModal() {
@@ -1856,7 +1856,7 @@ Formato exacto: [{"f": 13, "h": "UNI", "a": "JP2", "hg": 2, "ag": 0}] — incluy
               parsed.forEach(item => {
                 if (item && typeof item.f === 'number' && typeof item.hg === 'number' && typeof item.ag === 'number') {
                   const idx = state.matches.findIndex(m => m.f === item.f && m.h === item.h && m.a === item.a);
-                  if (idx !== -1) {
+                  if (idx !== -1 && !INITIAL_MATCHES[idx].official) {
                     state.matches[idx].hg = item.hg;
                     state.matches[idx].ag = item.ag;
                     state.matches[idx].official = true;
@@ -1869,15 +1869,15 @@ Formato exacto: [{"f": 13, "h": "UNI", "a": "JP2", "hg": 2, "ag": 0}] — incluy
           saveState();
           renderAll();
           const nowStr = new Date().toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' });
-          statusText.textContent = `Sincronizado en vivo (${nowStr}) • Fechas 1–12 oficiales cargadas (${updatedCount} verificados)`;
+          statusText.textContent = `Sincronizado en vivo (${nowStr}) • Fechas 1–13 oficiales cargadas (${updatedCount} nuevos verificados)`;
           showToast('Sincronización en vivo completada con éxito.');
         } else {
-          statusText.textContent = 'Resultados oficiales al día hasta Fecha 12 • Fechas 13–17 listas para simular';
-          showToast('Datos oficiales verificados hasta la Fecha 12 jugada.');
+          statusText.textContent = 'Resultados oficiales cargados hasta Fecha 13 • Fechas 14–17 listas para simular';
+          showToast('Resultados oficiales cargados hasta la Fecha 13 jugada.');
         }
       } catch (err) {
-        statusText.textContent = 'Resultados oficiales al día hasta Fecha 12 • Fechas 13–17 listas para simular';
-        showToast('Todos los resultados oficiales hasta la Fecha 12 están al día.');
+        statusText.textContent = 'Resultados oficiales cargados hasta Fecha 13 • Fechas 14–17 listas para simular';
+        showToast('Resultados oficiales cargados hasta la Fecha 13 jugada.');
       } finally {
         syncIcon.classList.remove('animate-spin');
         btn.disabled = false;
