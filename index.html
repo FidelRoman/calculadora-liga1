@@ -103,7 +103,7 @@
           </div>
           <p class="text-xs text-slate-400 flex items-center gap-1.5">
             <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span id="syncStatusText">Fecha 14: 8/9 y Fecha 15: 8/9 finalizados • pendientes editables</span>
+            <span id="syncStatusText">Fecha 14: 8/9 y Fecha 15: 9/9 finalizados • pendientes editables</span>
           </p>
         </div>
       </div>
@@ -335,7 +335,7 @@
         <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
           <div>
             <h3 class="font-display font-bold text-lg text-white">Fixture Completo y Simulador por Jornada (Fechas 1 a 17)</h3>
-            <p class="text-xs text-slate-400">Fechas 1 a 13 oficiales. Fecha 14: 8/9 y Fecha 15: 8/9 finalizados; Alianza–Cienciano (hoy 20:00) y U–Boys (4/11) pendientes.</p>
+            <p class="text-xs text-slate-400">Fechas 1 a 13 oficiales. Fecha 14: 8/9 y Fecha 15: 9/9 finalizados; U–Boys (4/11) pendiente.</p>
           </div>
           <div class="flex items-center gap-2">
             <button onclick="fillRemainingRandomly()" class="px-3.5 py-2 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-500/30 text-indigo-300 text-xs font-semibold transition flex items-center gap-1.5">
@@ -774,7 +774,7 @@
       { f: 15, h: 'AAS', a: 'JP2', hg: 1, ag: 0, official: true },
       { f: 15, h: 'COM', a: 'ADT', hg: 2, ag: 2, official: true },
       { f: 15, h: 'SHU', a: 'MEL', hg: 2, ag: 0, official: true },
-      { f: 15, h: 'ALI', a: 'CIE', hg: null, ag: null, official: false },
+      { f: 15, h: 'ALI', a: 'CIE', hg: 1, ag: 0, official: true },
       { f: 15, h: 'UTC', a: 'GAR', hg: 2, ag: 3, official: true },
       { f: 15, h: 'GRA', a: 'UNI', hg: 1, ag: 3, official: true },
       { f: 15, h: 'CRI', a: 'CAJ', hg: 5, ag: 0, official: true },
@@ -1878,11 +1878,11 @@ Formato exacto: [{"f": 13, "h": "UNI", "a": "JP2", "hg": 2, "ag": 0}] — incluy
           statusText.textContent = `Sincronizado en vivo (${nowStr}) • ${updatedCount} nuevos resultados; fechas 14 y 15 parciales`;
           showToast('Sincronización en vivo completada con éxito.');
         } else {
-          statusText.textContent = 'Resultados cargados: Fecha 14 (8/9), Fecha 15 (8/9) • pendientes editables';
+          statusText.textContent = 'Resultados cargados: Fecha 14 (8/9), Fecha 15 (9/9) • pendientes editables';
           showToast('Resultados confirmados cargados; las fechas 14 y 15 siguen incompletas.');
         }
       } catch (err) {
-        statusText.textContent = 'Resultados cargados: Fecha 14 (8/9), Fecha 15 (8/9) • pendientes editables';
+        statusText.textContent = 'Resultados cargados: Fecha 14 (8/9), Fecha 15 (9/9) • pendientes editables';
         showToast('Resultados confirmados cargados; las fechas 14 y 15 siguen incompletas.');
       } finally {
         syncIcon.classList.remove('animate-spin');
