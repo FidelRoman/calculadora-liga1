@@ -323,7 +323,7 @@
           <i data-lucide="crown" class="w-5 h-5 text-amber-400"></i>
           Playoffs y proyección de copas 2027
         </h3>
-        <p class="text-xs text-slate-400 mb-4">Escenario según tus resultados proyectados y el reglamento Liga1 2026. Las posiciones internacionales se confirman después de los Playoffs.</p>
+        <p class="text-xs text-slate-400 mb-4">Escenario según tus resultados proyectados y el reglamento Liga1 2026. Incluye fechas L1 Max: semifinales 28 nov / 4 dic y final 9 / 13 dic; si hay final directa, 28 nov / 6 dic.</p>
         <div id="playoffSimulationBox" class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <!-- Populated dynamically by JS -->
         </div>
@@ -1458,22 +1458,43 @@
         let playoffDescription = '';
         let playoffMatchups = '';
         let finalDescription = '';
+        // Calendario L1 Max / Eduardo Combe (sept 2026): Clausura termina 22 nov.
+        let scheduleHtml = '';
+        const scheduleBlock = (rows) => `
+          <div class="mt-2 p-2.5 rounded-lg bg-slate-950/80 border border-amber-500/20 space-y-1">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-amber-400">Calendario playoffs</div>
+            ${rows.map(([k, v]) => `<div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 text-[11px]"><span class="text-slate-400">${k}</span><span class="text-white font-semibold text-right">${v}</span></div>`).join('')}
+            <p class="text-[10px] text-slate-500 pt-0.5">Fuente: L1 Max. Horarios exactos por confirmar.</p>
+          </div>
+        `;
 
         if (clWinner.id === openingWinnerId) {
           playoffTitle = 'Alianza Lima campeón nacional directo';
           playoffDescription = 'Al ganar Apertura y Clausura, Alianza es campeón sin una semifinal por el título.';
           playoffMatchups = matchupRow('Fase 1 · subcampeonato', topFour[2].id, topFour[3].id);
           finalDescription = `El ganador enfrenta al ${teamBadge(topFour[1].id)} en la Fase 2 por el subcampeonato. Las llaves son de ida y vuelta.`;
+          scheduleHtml = scheduleBlock([
+            ['Fase 1 (subcampeón) · ida / vuelta', '28 nov · 4 dic'],
+            ['Fase 2 (subcampeón) · ida / vuelta', '9 dic · 13 dic'],
+          ]);
         } else if (stageWinners.every(id => topTwo.includes(id))) {
           playoffTitle = 'Final directa por el título · sin semifinal';
           playoffDescription = 'Los campeones del Apertura y Clausura ocupan los dos primeros puestos del acumulado; clasifican directamente a la final.';
           playoffMatchups = matchupRow('Play-Off Final · ida y vuelta', openingWinnerId, clWinner.id);
           finalDescription = 'El club mejor ubicado en el acumulado define la vuelta como local.';
+          scheduleHtml = scheduleBlock([
+            ['Final directa · ida', '28 de noviembre'],
+            ['Final directa · vuelta', '6 de diciembre'],
+          ]);
         } else if (eligibleStageWinners.length === 0) {
           playoffTitle = 'Final directa por el título · sin semifinal';
           playoffDescription = 'Los ganadores de Apertura y Clausura quedaron fuera del top 8 acumulado y pierden su plaza de Playoffs.';
           playoffMatchups = matchupRow('Play-Off Final · ida y vuelta', topTwo[0], topTwo[1]);
           finalDescription = 'Los dos primeros del acumulado clasifican directamente a la final.';
+          scheduleHtml = scheduleBlock([
+            ['Final directa · ida', '28 de noviembre'],
+            ['Final directa · vuelta', '6 de diciembre'],
+          ]);
         } else if (eligibleStageWinners.length === 1) {
           playoffTitle = 'Una semifinal por el título';
           playoffDescription = 'Un campeón de etapa no quedó entre los ocho primeros del acumulado y pierde su plaza.';
@@ -1481,9 +1502,17 @@
             const [directFinalist, ...semifinalists] = playoffParticipants;
             playoffMatchups = matchupRow('Semifinal · ida y vuelta', semifinalists[0], semifinalists[1]);
             finalDescription = `El ${teamBadge(directFinalist)} clasifica directo a la final; enfrenta al ganador de la semifinal.`;
+            scheduleHtml = scheduleBlock([
+              ['Semifinal · ida / vuelta', '28 nov · 4 dic'],
+              ['Final · ida / vuelta', '9 dic · 13 dic'],
+            ]);
           } else {
             playoffMatchups = matchupRow('Play-Off Final · ida y vuelta', playoffParticipants[0], playoffParticipants[1]);
             finalDescription = 'Solo quedan dos clubes con derecho a Playoffs; clasifican directamente a la final.';
+            scheduleHtml = scheduleBlock([
+              ['Final directa · ida', '28 de noviembre'],
+              ['Final directa · vuelta', '6 de diciembre'],
+            ]);
           }
         } else {
           const winnersInTopTwo = eligibleStageWinners.filter(id => topTwo.includes(id));
@@ -1495,12 +1524,20 @@
             playoffDescription = `${TEAM_MAP[directFinalist].name}, campeón de etapa y top 2 del acumulado, pasa directamente a la final.`;
             playoffMatchups = matchupRow('Semifinal · ida y vuelta', otherStageWinner, otherTopTwoClub);
             finalDescription = `El ganador enfrenta al ${teamBadge(directFinalist)} en la final.`;
+            scheduleHtml = scheduleBlock([
+              ['Semifinal · ida / vuelta', '28 nov · 4 dic'],
+              ['Final · ida / vuelta', '9 dic · 13 dic'],
+            ]);
           } else {
             playoffTitle = 'Dos semifinales por el título';
             playoffDescription = 'Clasifican los campeones de Apertura y Clausura (si están en el top 8) más los dos primeros del acumulado.';
             playoffMatchups = matchupRow('Semifinal 1 · ida y vuelta', playoffParticipants[0], playoffParticipants[3])
               + matchupRow('Semifinal 2 · ida y vuelta', playoffParticipants[1], playoffParticipants[2]);
             finalDescription = 'Los dos ganadores disputan la final por el título nacional.';
+            scheduleHtml = scheduleBlock([
+              ['Semifinales · ida / vuelta', '28 nov · 4 dic'],
+              ['Final · ida / vuelta', '9 dic · 13 dic'],
+            ]);
           }
         }
 
@@ -1522,6 +1559,7 @@
             <p class="text-xs text-slate-400">${playoffDescription}</p>
             <div class="space-y-1">${playoffMatchups}</div>
             <p class="text-xs text-slate-400">${finalDescription}</p>
+            ${scheduleHtml}
             <p class="text-[10px] text-slate-500">En llaves de ida y vuelta se define por puntos, luego diferencia de goles y, si persiste el empate, penales. La mejor ubicación acumulada da la localía de vuelta.</p>
           </div>
 
