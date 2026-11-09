@@ -103,7 +103,7 @@
           </div>
           <p class="text-xs text-slate-400 flex items-center gap-1.5">
             <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span id="syncStatusText">F14–F15 completas • F16: Grau 3–0 Cusco FC • Resto editable</span>
+            <span id="syncStatusText">F15–F16 completas • F17 editable</span>
           </p>
         </div>
       </div>
@@ -221,8 +221,8 @@
             <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-emerald-500/30 border border-emerald-500"></span> Ganó (3 pts)</span>
             <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-amber-500/30 border border-amber-500"></span> Empató (1 pt)</span>
             <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-rose-500/30 border border-rose-500"></span> Perdió (0 pts)</span>
-            <span class="flex items-center gap-1.5 text-slate-400"><i data-lucide="lock" class="w-3.5 h-3.5 text-slate-500"></i> F1–F15 Oficiales (no editables)</span>
-            <span class="flex items-center gap-1.5 text-indigo-300 font-semibold"><span class="w-2.5 h-2.5 rounded-sm bg-indigo-500/30 border border-indigo-400 border-dashed"></span> F16–F17: partidos pendientes editables</span>
+            <span class="flex items-center gap-1.5 text-slate-400"><i data-lucide="lock" class="w-3.5 h-3.5 text-slate-500"></i> F1–F16 Oficiales (no editables)</span>
+            <span class="flex items-center gap-1.5 text-indigo-300 font-semibold"><span class="w-2.5 h-2.5 rounded-sm bg-indigo-500/30 border border-indigo-400 border-dashed"></span> F17: partidos pendientes editables</span>
           </div>
         </div>
 
@@ -335,7 +335,7 @@
         <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
           <div>
             <h3 class="font-display font-bold text-lg text-white">Fixture Completo y Simulador por Jornada (Fechas 1 a 17)</h3>
-            <p class="text-xs text-slate-400">Fechas 1 a 15 oficiales (F14 y F15 completas). F16–F17 pendientes editables.</p>
+            <p class="text-xs text-slate-400">Fechas 1 a 16 oficiales (F15 y F16 completas). F17 pendiente editable.</p>
           </div>
           <div class="flex items-center gap-2">
             <button onclick="fillRemainingRandomly()" class="px-3.5 py-2 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-500/30 text-indigo-300 text-xs font-semibold transition flex items-center gap-1.5">
@@ -783,14 +783,14 @@
 
       // FECHA 16 (Grau 3–0 Cusco FC finalizado el 6/11/2026; resto pendiente)
       { f: 16, h: 'GRA', a: 'CUS', hg: 3, ag: 0, official: true },
-      { f: 16, h: 'MEL', a: 'JP2', hg: null, ag: null, official: false },
-      { f: 16, h: 'CAJ', a: 'AAS', hg: null, ag: null, official: false },
-      { f: 16, h: 'SBA', a: 'UTC', hg: null, ag: null, official: false },
-      { f: 16, h: 'CHA', a: 'ALI', hg: null, ag: null, official: false },
-      { f: 16, h: 'CIE', a: 'SHU', hg: null, ag: null, official: false },
+      { f: 16, h: 'MEL', a: 'JP2', hg: 2, ag: 1, official: true },
+      { f: 16, h: 'CAJ', a: 'AAS', hg: 2, ag: 0, official: true },
+      { f: 16, h: 'SBA', a: 'UTC', hg: 0, ag: 0, official: true },
+      { f: 16, h: 'CHA', a: 'ALI', hg: 1, ag: 1, official: true },
+      { f: 16, h: 'CIE', a: 'SHU', hg: 1, ag: 2, official: true },
       { f: 16, h: 'ADT', a: 'CRI', hg: 1, ag: 1, official: true },
-      { f: 16, h: 'UNI', a: 'MOQ', hg: null, ag: null, official: false },
-      { f: 16, h: 'GAR', a: 'COM', hg: null, ag: null, official: false },
+      { f: 16, h: 'UNI', a: 'MOQ', hg: 2, ag: 2, official: true },
+      { f: 16, h: 'GAR', a: 'COM', hg: 0, ag: 0, official: true },
 
       // FECHA 17 (Por jugar: 14 al 22 Nov 2026)
       { f: 17, h: 'CUS', a: 'ADT', hg: null, ag: null, official: false },
@@ -813,7 +813,7 @@
       matrixRange: 'compact', // 'compact' (últimas 5 fechas: 3 cerradas + 2 pendientes) or 'full' (F1..F17)
       inputMode: 'points',    // 'points' (3/1/0 selector) or 'scores' (exact goals)
       activeTab: 'matrix',    // 'matrix' | 'fixtures'
-      selectedFecha: 16
+      selectedFecha: 17
     };
 
     function loadSavedState() {
@@ -1916,11 +1916,11 @@ Formato exacto: [{"f": 13, "h": "UNI", "a": "JP2", "hg": 2, "ag": 0}] — incluy
           statusText.textContent = `Sincronizado en vivo (${nowStr}) • ${updatedCount} nuevos resultados; fechas 14 y 15 parciales`;
           showToast('Sincronización en vivo completada con éxito.');
         } else {
-          statusText.textContent = 'Resultados cargados: Fecha 14 (9/9), Fecha 15 (9/9) • F16–F17 editables';
+          statusText.textContent = 'Resultados cargados: Fecha 15 (9/9), Fecha 16 (9/9) • F17 editable';
           showToast('Resultados confirmados cargados; las fechas 14 y 15 siguen incompletas.');
         }
       } catch (err) {
-        statusText.textContent = 'Resultados cargados: Fecha 14 (9/9), Fecha 15 (9/9) • F16–F17 editables';
+        statusText.textContent = 'Resultados cargados: Fecha 15 (9/9), Fecha 16 (9/9) • F17 editable';
         showToast('Resultados confirmados cargados; las fechas 14 y 15 siguen incompletas.');
       } finally {
         syncIcon.classList.remove('animate-spin');
