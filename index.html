@@ -1071,7 +1071,7 @@
           return matchesInDate.length > 0 && matchesInDate.every(m => m.official);
         });
       const latestPlayedFecha = fullyOfficialDates.length ? Math.max(...fullyOfficialDates) : 11;
-      const groupedThroughFecha = Math.min(16, Math.max(1, latestPlayedFecha - 3)); // últimas 5 fechas: 3 cerradas + 2 pendientes
+      const groupedThroughFecha = Math.min(12, Math.max(1, latestPlayedFecha - 4)); // últimas 5 fechas (F13–F17): 4 cerradas + 1 pronóstico
       const startFecha = state.matrixRange === 'compact' ? groupedThroughFecha + 1 : 1;
       const groupedPoints = state.matches.reduce((totals, match) => {
         if (match.f > groupedThroughFecha || match.hg === null || match.ag === null) return totals;
